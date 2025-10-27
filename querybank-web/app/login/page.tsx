@@ -29,8 +29,8 @@ export default function LoginPage() {
         // Store token and user info
         localStorage.setItem('token', data.token);
         localStorage.setItem('user', JSON.stringify(data.user));
-        // Redirect to dashboard
-        router.push('/');
+        // Redirect to chat page
+        router.push('/chat');
       } else {
         setError(data.error || 'Giriş uğursuz oldu');
       }
@@ -44,6 +44,15 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
+        {/* Back to Home */}
+        <button
+          onClick={() => router.push('/')}
+          className="mb-4 text-sm text-slate-600 hover:text-slate-900 flex items-center space-x-2"
+        >
+          <span>←</span>
+          <span>Əsas səhifəyə qayıt</span>
+        </button>
+
         {/* Logo */}
         <div className="text-center mb-8">
           <div className="inline-flex items-center space-x-3 mb-4">
