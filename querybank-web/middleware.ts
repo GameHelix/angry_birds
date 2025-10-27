@@ -10,7 +10,13 @@ export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Public paths that don't require authentication
-  if (pathname === '/login' || pathname.startsWith('/api/auth/login')) {
+  const publicPaths = [
+    '/',
+    '/login',
+    '/landing',
+  ];
+
+  if (publicPaths.includes(pathname) || pathname.startsWith('/api/auth/login')) {
     return NextResponse.next();
   }
 
