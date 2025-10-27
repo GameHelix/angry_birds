@@ -134,6 +134,96 @@ export async function GET() {
       LIMIT 15
     `);
 
+    // 11. Risk Analysis - High-Risk Customers
+    const riskAnalysis = await query(`
+      SELECT
+        c.first_name || ' ' || c.last_name as customer_name,
+        c.credit_score,
+        c.account_balance,
+        COALESCE(SUM(l.outstanding_balance), 0) as total_loans,
+        CASE
+          WHEN c.credit_score < 650 AND COALESCE(SUM(l.outstanding_balance), 0) > 20000 THEN 'Yüksək'
+          WHEN c.credit_score < 700 AND COALESCE(SUM(l.outstanding_balance), 0) > 30000 THEN 'Orta'
+          ELSE 'Aşağı'
+        END as risk_level
+      FROM demo_bank.customers c
+      LEFT JOIN demo_bank.loans l ON c.customer_id = l.customer_id AND l.loan_status = 'active'
+      WHERE c.account_status = 'active'
+      GROUP BY c.customer_id, c.first_name, c.last_name, c.credit_score, c.account_balance
+      HAVING COALESCE(SUM(l.outstanding_balance), 0) > 0
+      ORDER BY
+        CASE
+          WHEN c.credit_score < 650 AND COALESCE(SUM(l.outstanding_balance), 0) > 20000 THEN 1
+          WHEN c.credit_score < 700 AND COALESCE(SUM(l.outstanding_balance), 0) > 30000 THEN 2
+          ELSE 3
+        END,
+        total_loans DESC
+      LIMIT 10
+    `);
+
+    // 12. Monthly Account Balance Growth
+    const balanceGrowth = await query(`
+      SELECT
+        account_type,
+        COUNT(*) as customer_count,
+        SUM(account_balance) as total_balance,
+        AVG(account_balance) as avg_balance,
+        MAX(account_balance) as max_balance
+      FROM demo_bank.customers
+      WHERE account_status = 'active'
+      GROUP BY account_type
+      ORDER BY total_balance DESC
+    `);
+
+    // 13. Loan Performance Metrics
+    const loanPerformance = await query(`
+      SELECT
+        loan_type,
+        COUNT(*) as total_loans,
+        SUM(CASE WHEN loan_status = 'active' THEN 1 ELSE 0 END) as active_loans,
+        SUM(CASE WHEN loan_status = 'paid' THEN 1 ELSE 0 END) as paid_loans,
+        SUM(CASE WHEN loan_status = 'defaulted' THEN 1 ELSE 0 END) as defaulted_loans,
+        ROUND(SUM(CASE WHEN loan_status = 'defaulted' THEN 1 ELSE 0 END)::numeric / COUNT(*)::numeric * 100, 2) as default_rate
+      FROM demo_bank.loans
+      GROUP BY loan_type
+      ORDER BY total_loans DESC
+    `);
+
+    // 14. Customer Segmentation by Value
+    const customerSegmentation = await query(`
+      SELECT
+        CASE
+          WHEN account_balance >= 75000 THEN 'Premium (75K+)'
+          WHEN account_balance >= 50000 THEN 'Gold (50-75K)'
+          WHEN account_balance >= 25000 THEN 'Silver (25-50K)'
+          ELSE 'Standard (<25K)'
+        END as segment,
+        COUNT(*) as customer_count,
+        AVG(credit_score) as avg_credit_score,
+        SUM(account_balance) as total_balance
+      FROM demo_bank.customers
+      WHERE account_status = 'active'
+      GROUP BY segment
+      ORDER BY MIN(account_balance) DESC
+    `);
+
+    // 15. Top Revenue Customers (by transaction volume)
+    const topRevenueCustomers = await query(`
+      SELECT
+        c.first_name || ' ' || c.last_name as customer_name,
+        c.account_type,
+        COUNT(t.transaction_id) as transaction_count,
+        SUM(t.amount) as total_transaction_volume,
+        c.account_balance,
+        c.credit_score
+      FROM demo_bank.customers c
+      INNER JOIN demo_bank.transactions t ON c.customer_id = t.customer_id
+      WHERE c.account_status = 'active'
+      GROUP BY c.customer_id, c.first_name, c.last_name, c.account_type, c.account_balance, c.credit_score
+      ORDER BY total_transaction_volume DESC
+      LIMIT 10
+    `);
+
     return NextResponse.json({
       success: true,
       data: {
@@ -147,6 +237,11 @@ export async function GET() {
         highValueCustomers: highValueCustomers.rows[0],
         customersWithLoans: customersWithLoans.rows,
         recentLargeTransactions: recentLargeTransactions.rows,
+        riskAnalysis: riskAnalysis.rows,
+        balanceGrowth: balanceGrowth.rows,
+        loanPerformance: loanPerformance.rows,
+        customerSegmentation: customerSegmentation.rows,
+        topRevenueCustomers: topRevenueCustomers.rows,
       },
     });
   } catch (error: any) {
