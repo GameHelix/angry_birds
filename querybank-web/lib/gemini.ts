@@ -23,39 +23,65 @@ export async function generateQuery(userQuestion: string): Promise<QueryResponse
   const model = genAI.getGenerativeModel({
     model: 'gemini-2.5-flash',
     generationConfig: {
-      temperature: 0.1,
+      temperature: 0.3,
       maxOutputTokens: 1024,
     }
   });
 
-  const prompt = `You are a PostgreSQL expert. Generate a SQL query to answer this question: "${userQuestion}"
+  const prompt = `You are a SQL query generator for a PostgreSQL banking database.
 
-Database schema (demo_bank):
-- customers: customer_id, first_name, last_name, account_type, account_balance, account_status, credit_score
-- loans: loan_id, customer_id, loan_type, outstanding_balance, loan_status
-- transactions: transaction_id, customer_id, amount, transaction_type, transaction_date
+User Question: "${userQuestion}"
 
-Return ONLY valid JSON (no markdown, no explanation outside JSON):
+Database Schema (demo_bank):
+- Table: customers
+  Columns: customer_id, first_name, last_name, account_type, account_balance, account_status, credit_score
+
+- Table: loans
+  Columns: loan_id, customer_id (FK), loan_type, outstanding_balance, loan_status
+
+- Table: transactions
+  Columns: transaction_id, customer_id (FK), amount, transaction_type, transaction_date
+
+Generate a response in this EXACT JSON format:
 {
-  "query": "SET search_path TO demo_bank; SELECT ...",
-  "needs_chart": true or false,
-  "chart_type": "bar" or "line" or "pie" or null,
+  "query": "SET search_path TO demo_bank; SELECT customer_id FROM customers LIMIT 10",
+  "needs_chart": false,
+  "chart_type": null,
   "chart_config": {
     "x_column": "column_name",
     "y_column": "column_name",
     "title": "Chart Title",
-    "xlabel": "X Label",
-    "ylabel": "Y Label"
+    "xlabel": "X axis label",
+    "ylabel": "Y axis label"
   },
-  "explanation": "Brief explanation in Azerbaijani"
+  "explanation": "Sorğu nəticəsinin izahı Azərbaycan dilində"
 }
 
-Rules:
-1. Start query with "SET search_path TO demo_bank;"
-2. After SET search_path, use table names WITHOUT schema prefix (customers, NOT demo_bank.customers)
-3. Use proper PostgreSQL syntax
-4. For chart_config, use actual column names from the SELECT query
-5. Return explanation in Azerbaijani language`;
+Important Rules:
+1. Start SQL with "SET search_path TO demo_bank;"
+2. After SET search_path, use table names WITHOUT schema prefix (write "customers", not "demo_bank.customers")
+3. Use PostgreSQL syntax (not MySQL)
+4. If the query returns data suitable for a chart (multiple rows with numeric values), set needs_chart to true
+5. For charts: use "bar" for comparisons, "pie" for distributions, "line" for trends
+6. In chart_config, use the EXACT column names from your SELECT query
+7. Write explanation in Azerbaijani language
+8. Return ONLY the JSON object, no additional text
+
+Example question: "Ən yüksək balansa malik müştərilər"
+Example response:
+{
+  "query": "SET search_path TO demo_bank; SELECT first_name, last_name, account_balance FROM customers ORDER BY account_balance DESC LIMIT 10",
+  "needs_chart": true,
+  "chart_type": "bar",
+  "chart_config": {
+    "x_column": "first_name",
+    "y_column": "account_balance",
+    "title": "Ən Yüksək Balansa Malik Müştərilər",
+    "xlabel": "Müştəri",
+    "ylabel": "Balans (₼)"
+  },
+  "explanation": "Ən yüksək hesab balansına malik 10 müştəri göstərilir."
+}`;
 
   try {
     const result = await model.generateContent(prompt);
