@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Send, Sparkles, LogOut, BarChart3 } from 'lucide-react';
+import { Send, Sparkles, LogOut, BarChart3, Terminal } from 'lucide-react';
 import DataChart from '@/components/DataChart';
 
 interface Message {
@@ -134,7 +134,14 @@ export default function Home() {
                   className="px-4 py-2 text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition flex items-center space-x-2"
                 >
                   <BarChart3 className="h-4 w-4" />
-                  <span>Hesabatlar</span>
+                  <span>Analitika</span>
+                </button>
+                <button
+                  onClick={() => router.push('/sql')}
+                  className="px-4 py-2 text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition flex items-center space-x-2"
+                >
+                  <Terminal className="h-4 w-4" />
+                  <span>SQL Konsolu</span>
                 </button>
               </nav>
             </div>
