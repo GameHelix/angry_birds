@@ -32,7 +32,12 @@ export async function generateQuery(userQuestion: string): Promise<QueryResponse
 
 User Question: "${userQuestion}"
 
-IMPORTANT: If the user's input is a greeting (salam, hello, hi, etc.), random gibberish, or not a real question about banking data, respond with an error by setting query to "ERROR" and explanation in Azerbaijani explaining the issue.
+IMPORTANT: Only reject the question if it is:
+1. A greeting (salam, hello, hi, etc.)
+2. Random gibberish with no meaning (asdfjkl, sfgdsa, etc.)
+3. Not related to banking data at all
+
+If it's ANY question about customers, loans, transactions, balances, credit scores, or banking data (even if using words like "worst", "bad", "lowest"), you MUST generate a valid SQL query. Do NOT reject business questions just because they use negative words.
 
 Database Schema (demo_bank):
 - Table: customers
@@ -93,6 +98,22 @@ Response:
   "chart_type": null,
   "chart_config": null,
   "explanation": "Daxil etdiyiniz sorğu anlaşıqlı deyil. Zəhmət olmasa bank məlumatları haqqında konkret sual verin."
+}
+
+Example 3 - Valid question with negative words: "en pis musteri" or "lowest credit score"
+Response:
+{
+  "query": "SET search_path TO demo_bank; SELECT first_name, last_name, credit_score, account_balance FROM customers ORDER BY credit_score ASC LIMIT 10",
+  "needs_chart": true,
+  "chart_type": "bar",
+  "chart_config": {
+    "x_column": "first_name",
+    "y_column": "credit_score",
+    "title": "Ən Aşağı Kredit Reytinqinə Malik Müştərilər",
+    "xlabel": "Müştəri",
+    "ylabel": "Kredit Reytinqi"
+  },
+  "explanation": "Ən aşağı kredit reytinqinə malik 10 müştəri göstərilir."
 }`;
 
   try {
