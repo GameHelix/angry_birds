@@ -119,8 +119,10 @@ export default function Home() {
   const exampleQuestions = [
     'Neçə aktiv müştərimiz var?',
     'Kredit növlərinə görə ümumi kredit balansını göstər',
-    'Balansı 20000 manatdan çox olan müştəriləri göstər',
-    'Hesab növlərinə görə orta kredit reytinqi',
+    'Ən yüksək balansa malik 5 müştərini göstər',
+    'Hesab növlərinə görə orta kredit reytinqi göstər',
+    'Kredit statuslarına görə müştəri sayını göstər',
+    'Ən çox əməliyyat edən müştəriləri göstər',
   ];
 
   return (
@@ -143,7 +145,7 @@ export default function Home() {
             <div className="flex items-center space-x-4">
               {user && (
                 <span className="text-sm text-slate-700 font-medium">
-                  {user.full_name} ({user.role})
+                  {user.full_name}
                 </span>
               )}
               <button

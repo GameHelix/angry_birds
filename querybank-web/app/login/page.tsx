@@ -118,17 +118,14 @@ export default function LoginPage() {
 
           {/* Demo Credentials */}
           <div className="mt-6 pt-6 border-t border-slate-200">
-            <p className="text-sm text-slate-600 mb-3 font-medium">Demo hesablar:</p>
-            <div className="space-y-2 text-xs text-slate-500">
-              <div className="bg-slate-50 p-2 rounded">
-                <strong>Admin:</strong> admin@bank.az / password123
-              </div>
-              <div className="bg-slate-50 p-2 rounded">
-                <strong>Manager:</strong> manager@bank.az / password123
-              </div>
-              <div className="bg-slate-50 p-2 rounded">
-                <strong>Analyst:</strong> analyst@bank.az / password123
-              </div>
+            <p className="text-sm text-slate-600 mb-3 font-medium">Demo hesab:</p>
+            <div className="bg-slate-50 p-3 rounded-lg">
+              <p className="text-sm text-slate-700">
+                <span className="font-semibold">Email:</span> demo@querybank.az
+              </p>
+              <p className="text-sm text-slate-700 mt-1">
+                <span className="font-semibold">Parol:</span> demo123
+              </p>
             </div>
           </div>
         </div>

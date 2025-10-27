@@ -32,13 +32,11 @@ CREATE TRIGGER update_users_updated_at
     FOR EACH ROW
     EXECUTE FUNCTION demo_bank.update_users_updated_at();
 
--- Insert sample users (password: "password123")
--- Hash generated with: bcrypt.hash('password123', 10)
+-- Insert demo user (password: "demo123")
+-- Hash generated with: bcrypt.hash('demo123', 10)
 INSERT INTO demo_bank.users (email, password_hash, full_name, role, department)
 VALUES
-    ('admin@bank.az', '$2b$10$lHfhQRDagM8EGi6jlfrvxeo9T17ft2OaukvuBqqqjau7yJc2BeIL.', 'Admin İstifadəçi', 'admin', 'İdarəetmə'),
-    ('manager@bank.az', '$2b$10$lHfhQRDagM8EGi6jlfrvxeo9T17ft2OaukvuBqqqjau7yJc2BeIL.', 'Rəşad Məmmədov', 'manager', 'Əməliyyatlar'),
-    ('analyst@bank.az', '$2b$10$lHfhQRDagM8EGi6jlfrvxeo9T17ft2OaukvuBqqqjau7yJc2BeIL.', 'Aynur Həsənova', 'analyst', 'Analitika')
+    ('demo@querybank.az', '$2b$10$hash_will_be_generated_on_deployment', 'Demo İstifadəçi', 'analyst', 'Data Analitika')
 ON CONFLICT (email) DO NOTHING;
 
 COMMENT ON TABLE demo_bank.users IS 'Bank məlumat sisteminin istifadəçiləri';
