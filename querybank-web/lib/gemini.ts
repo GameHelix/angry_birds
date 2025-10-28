@@ -40,6 +40,14 @@ Database Schema (demo_bank):
 - loans: loan_id, customer_id (FK), loan_type, outstanding_balance, loan_status
 - transactions: transaction_id, customer_id (FK), amount, transaction_type, transaction_date
 
+LANGUAGE NOTE: Users may write in informal Azerbaijani (without special characters):
+- "chox" = "çox" (much/many)
+- "en chox" = "ən çox" (most)
+- "odeyen" = "ödəyən" (paying)
+- "odenis" = "ödəniş" (payment)
+- "musteri" = "müştəri" (customer)
+Always accept both formal and informal spelling!
+
 === STEP 1: UNDERSTAND USER INTENT ===
 
 Classify the user's intent into ONE of these categories:
@@ -216,7 +224,25 @@ User: "təşəkkürlər" or "thank you" or "sağol"
   "explanation": "Polite acknowledgment - no query needed"
 }
 
-Example 9 - Gibberish:
+Example 9 - Loan query (informal Azerbaijani):
+User: "en chox kredit odeyen musteri" or "ən çox kredit ödəyən müştəri"
+{
+  "response_type": "query_with_chart",
+  "message": "Ən çox kredit ödəyən müştərilər (kredit balansına görə)",
+  "query": "SET search_path TO demo_bank; SELECT c.first_name, c.last_name, l.loan_type, l.outstanding_balance FROM customers c JOIN loans l ON c.customer_id = l.customer_id ORDER BY l.outstanding_balance DESC LIMIT 10",
+  "needs_chart": true,
+  "chart_type": "bar",
+  "chart_config": {
+    "x_column": "first_name",
+    "y_column": "outstanding_balance",
+    "title": "Ən Çox Kredit Balansı Olan Müştərilər",
+    "xlabel": "Müştəri",
+    "ylabel": "Kredit Balansı (₼)"
+  },
+  "explanation": "Showing customers with highest loan balances - accepting informal Azerbaijani spelling"
+}
+
+Example 10 - Gibberish:
 User: "asdfjkl" or "!@#$%"
 {
   "response_type": "error",
