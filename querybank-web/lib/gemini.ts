@@ -114,19 +114,41 @@ Response:
     "ylabel": "Kredit Reytinqi"
   },
   "explanation": "Ən aşağı kredit reytinqinə malik 10 müştəri göstərilir."
-}`;
+}
+
+Example 4 - Complex analytical query: "RFM analizi" or "müşteri seqmentasiyası"
+For RFM analysis (Recency, Frequency, Monetary), create a query that calculates:
+- R (Recency): Days since last transaction
+- F (Frequency): Number of transactions
+- M (Monetary): Total transaction amount
+Response:
+{
+  "query": "SET search_path TO demo_bank; SELECT c.customer_id, c.first_name, c.last_name, COUNT(t.transaction_id) as frequency, COALESCE(SUM(t.amount), 0) as monetary, COALESCE(CURRENT_DATE - MAX(t.transaction_date), 9999) as recency_days FROM customers c LEFT JOIN transactions t ON c.customer_id = t.customer_id GROUP BY c.customer_id, c.first_name, c.last_name ORDER BY frequency DESC, monetary DESC LIMIT 20",
+  "needs_chart": true,
+  "chart_type": "bar",
+  "chart_config": {
+    "x_column": "first_name",
+    "y_column": "monetary",
+    "title": "Müştərilərin Ümumi Əməliyyat Dəyəri (RFM - Monetary)",
+    "xlabel": "Müştəri",
+    "ylabel": "Ümumi Məbləğ (₼)"
+  },
+  "explanation": "RFM analizi: Müştərilər əməliyyat sayı (F), ümumi dəyər (M) və son əməliyyat tarixi (R) əsasında təhlil edilir. 20 ən aktiv müştəri göstərilir."
+}
+
+IMPORTANT REMINDER: You MUST return ONLY valid JSON. Do NOT include any explanatory text before or after the JSON. Do NOT use markdown formatting. Return ONLY the JSON object starting with { and ending with }.`;
 
   try {
     const result = await model.generateContent(prompt);
     const response = await result.response;
     const text = response.text();
 
-    console.log('AI Response:', text.substring(0, 200)); // Debug
+    console.log('AI Response:', text.substring(0, 300)); // Debug
 
     // Extract JSON from response - try multiple patterns
     let jsonText = '';
 
-    // Pattern 1: JSON in markdown code block
+    // Pattern 1: JSON in markdown code block with json tag
     const markdownMatch = text.match(/```json\s*([\s\S]*?)\s*```/);
     if (markdownMatch) {
       jsonText = markdownMatch[1];
@@ -140,13 +162,20 @@ Response:
         const jsonMatch = text.match(/\{[\s\S]*\}/);
         if (jsonMatch) {
           jsonText = jsonMatch[0];
+        } else {
+          // Pattern 4: JSON might be after some text, look for { ... } more aggressively
+          const aggressiveMatch = text.match(/(\{[^{}]*\{[^{}]*\}[^{}]*\}|\{[^{}]*\})/);
+          if (aggressiveMatch) {
+            jsonText = aggressiveMatch[0];
+          }
         }
       }
     }
 
     if (!jsonText) {
       console.error('Failed to extract JSON from response:', text);
-      throw new Error('No JSON found in response');
+      console.error('Full AI response:', text);
+      throw new Error('No JSON found in response. AI returned: ' + text.substring(0, 100));
     }
 
     const parsed = JSON.parse(jsonText.trim());
