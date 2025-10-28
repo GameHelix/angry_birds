@@ -8,22 +8,18 @@ import {
   DollarSign,
   FileText,
   BarChart3,
-  MessageSquare,
+  Brain,
   LogOut,
   Award,
   Terminal,
   AlertTriangle,
-  TrendingDown,
   PieChart,
-  Activity,
   Shield,
-  Target,
   Menu,
   X,
-  Sparkles,
+  Home,
 } from 'lucide-react';
 import DataChart from '@/components/DataChart';
-import StatsCard from '@/components/StatsCard';
 
 interface Stats {
   customers: number;
@@ -124,8 +120,8 @@ export default function ReportsPage() {
 
       {/* Content */}
       <div className="relative z-10">
-      {/* Header */}
-      <header className="bg-slate-900/80 backdrop-blur-2xl border-b border-white/10 sticky top-0 z-50">
+        {/* Header */}
+        <header className="bg-slate-900/80 backdrop-blur-2xl border-b border-white/10 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
             {/* Logo */}
@@ -145,42 +141,44 @@ export default function ReportsPage() {
             </div>
 
             {/* Desktop Navigation */}
-            <div className="hidden lg:flex items-center space-x-6">
+            <div className="hidden lg:flex items-center space-x-4">
               <nav className="flex space-x-2">
                 <button
                   onClick={() => router.push('/')}
-                  className="px-4 py-2 text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition"
+                  className="px-4 py-2 text-sm text-slate-300 hover:text-white hover:bg-white/5 rounded-lg transition flex items-center space-x-2"
                 >
+                  <Home className="h-4 w-4" />
                   <span>Əsas Səhifə</span>
                 </button>
                 <button
                   onClick={() => router.push('/chat')}
-                  className="px-4 py-2 text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition flex items-center space-x-2"
+                  className="px-4 py-2 text-sm text-slate-300 hover:text-white hover:bg-white/5 rounded-lg transition flex items-center space-x-2"
                 >
-                  <MessageSquare className="h-4 w-4" />
+                  <Brain className="h-4 w-4" />
                   <span>AI Çat</span>
                 </button>
-                <button className="px-4 py-2 text-sm bg-blue-50 text-blue-600 rounded-lg font-medium flex items-center space-x-2">
+                <button className="px-4 py-2 text-sm bg-gradient-to-r from-blue-600/20 to-purple-600/20 text-blue-400 border border-blue-500/30 rounded-lg font-medium flex items-center space-x-2">
                   <BarChart3 className="h-4 w-4" />
                   <span>Analitika</span>
                 </button>
                 <button
                   onClick={() => router.push('/sql')}
-                  className="px-4 py-2 text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition flex items-center space-x-2"
+                  className="px-4 py-2 text-sm text-slate-300 hover:text-white hover:bg-white/5 rounded-lg transition flex items-center space-x-2"
                 >
                   <Terminal className="h-4 w-4" />
                   <span>SQL Konsolu</span>
                 </button>
               </nav>
-              <div className="flex items-center space-x-4">
+              <div className="flex items-center space-x-3 pl-4 border-l border-white/10">
                 {user && (
-                  <span className="text-sm text-slate-700 font-medium">
-                    {user.full_name}
-                  </span>
+                  <div className="flex items-center space-x-2 px-3 py-1.5 bg-white/5 rounded-lg">
+                    <div className="h-2 w-2 bg-green-400 rounded-full animate-pulse"></div>
+                    <span className="text-sm text-slate-300 font-medium">{user.full_name}</span>
+                  </div>
                 )}
                 <button
                   onClick={handleLogout}
-                  className="text-sm text-slate-600 hover:text-slate-900 flex items-center space-x-1"
+                  className="px-3 py-1.5 text-sm text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition flex items-center space-x-1"
                 >
                   <LogOut className="h-4 w-4" />
                   <span>Çıxış</span>
@@ -191,7 +189,7 @@ export default function ReportsPage() {
             {/* Mobile Menu Button */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden p-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition"
+              className="lg:hidden p-2 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition"
             >
               {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>
@@ -199,58 +197,31 @@ export default function ReportsPage() {
 
           {/* Mobile Menu */}
           {mobileMenuOpen && (
-            <div className="lg:hidden mt-4 pb-4 border-t border-slate-200 pt-4 space-y-2">
-              <button
-                onClick={() => {
-                  router.push('/');
-                  setMobileMenuOpen(false);
-                }}
-                className="w-full px-4 py-3 text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition"
-              >
-                Əsas Səhifə
+            <div className="lg:hidden mt-4 pb-4 border-t border-white/10 pt-4 space-y-2">
+              <button onClick={() => { router.push('/'); setMobileMenuOpen(false); }} className="w-full px-4 py-3 text-sm text-slate-300 hover:text-white hover:bg-white/5 rounded-lg transition flex items-center space-x-2">
+                <Home className="h-4 w-4" />
+                <span>Əsas Səhifə</span>
               </button>
-              <button
-                onClick={() => {
-                  router.push('/chat');
-                  setMobileMenuOpen(false);
-                }}
-                className="w-full px-4 py-3 text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition flex items-center space-x-2"
-              >
-                <MessageSquare className="h-4 w-4" />
+              <button onClick={() => { router.push('/chat'); setMobileMenuOpen(false); }} className="w-full px-4 py-3 text-sm text-slate-300 hover:text-white hover:bg-white/5 rounded-lg transition flex items-center space-x-2">
+                <Brain className="h-4 w-4" />
                 <span>AI Çat</span>
               </button>
-              <button
-                onClick={() => {
-                  setMobileMenuOpen(false);
-                }}
-                className="w-full px-4 py-3 text-sm bg-blue-50 text-blue-600 rounded-lg font-medium text-left flex items-center space-x-2"
-              >
+              <button onClick={() => setMobileMenuOpen(false)} className="w-full px-4 py-3 text-sm bg-gradient-to-r from-blue-600/20 to-purple-600/20 text-blue-400 border border-blue-500/30 rounded-lg font-medium text-left flex items-center space-x-2">
                 <BarChart3 className="h-4 w-4" />
                 <span>Analitika</span>
               </button>
-              <button
-                onClick={() => {
-                  router.push('/sql');
-                  setMobileMenuOpen(false);
-                }}
-                className="w-full px-4 py-3 text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition flex items-center space-x-2"
-              >
+              <button onClick={() => { router.push('/sql'); setMobileMenuOpen(false); }} className="w-full px-4 py-3 text-sm text-slate-300 hover:text-white hover:bg-white/5 rounded-lg transition flex items-center space-x-2">
                 <Terminal className="h-4 w-4" />
                 <span>SQL Konsolu</span>
               </button>
-              <div className="pt-4 border-t border-slate-200 space-y-2">
+              <div className="pt-4 border-t border-white/10 space-y-2">
                 {user && (
-                  <div className="px-4 py-2 text-sm text-slate-700 font-medium">
-                    {user.full_name}
+                  <div className="px-4 py-2 text-sm text-slate-300 font-medium flex items-center space-x-2">
+                    <div className="h-2 w-2 bg-green-400 rounded-full animate-pulse"></div>
+                    <span>{user.full_name}</span>
                   </div>
                 )}
-                <button
-                  onClick={() => {
-                    handleLogout();
-                    setMobileMenuOpen(false);
-                  }}
-                  className="w-full px-4 py-3 text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition flex items-center space-x-2"
-                >
+                <button onClick={() => { handleLogout(); setMobileMenuOpen(false); }} className="w-full px-4 py-3 text-sm text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition flex items-center space-x-2">
                   <LogOut className="h-4 w-4" />
                   <span>Çıxış</span>
                 </button>
@@ -258,60 +229,87 @@ export default function ReportsPage() {
             </div>
           )}
         </div>
-      </header>
+        </header>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        {/* Key Metrics */}
-        {stats && (
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          {/* Key Metrics */}
+          {stats && (
           <div className="mb-6">
-            <h2 className="text-lg font-semibold text-slate-900 mb-4">Əsas Göstəricilər</h2>
+            <h2 className="text-lg font-semibold text-white mb-4">Əsas Göstəricilər</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              <StatsCard
-                title="Aktiv Müştərilər"
-                value={stats.customers.toLocaleString()}
-                icon={Users}
-                trend="+12.5%"
-                trendUp={true}
-                color="blue"
-              />
-              <StatsCard
-                title="Aktiv Kreditlər"
-                value={stats.loans.toLocaleString()}
-                icon={FileText}
-                trend="+8.2%"
-                trendUp={true}
-                color="green"
-              />
-              <StatsCard
-                title="Ümumi Kredit Balansı"
-                value={`${(stats.totalLoanBalance / 1000).toFixed(0)}K ₼`}
-                icon={TrendingUp}
-                trend="-2.3%"
-                trendUp={false}
-                color="purple"
-              />
-              <StatsCard
-                title="Ümumi Depozitlər"
-                value={`${(stats.totalDeposits / 1000).toFixed(0)}K ₼`}
-                icon={DollarSign}
-                trend="+15.7%"
-                trendUp={true}
-                color="indigo"
-              />
+              {/* Stat Card 1 */}
+              <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6 hover:bg-white/10 transition-all group">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="bg-gradient-to-br from-blue-500/20 to-blue-600/20 p-3 rounded-xl border border-blue-500/30 group-hover:scale-110 transition-transform">
+                    <Users className="h-6 w-6 text-blue-400" />
+                  </div>
+                  <span className="text-xs font-medium text-green-400 flex items-center space-x-1">
+                    <TrendingUp className="h-3 w-3" />
+                    <span>+12.5%</span>
+                  </span>
+                </div>
+                <h3 className="text-sm text-slate-400 mb-1">Aktiv Müştərilər</h3>
+                <p className="text-2xl font-bold text-white">{stats.customers.toLocaleString()}</p>
+              </div>
+
+              {/* Stat Card 2 */}
+              <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6 hover:bg-white/10 transition-all group">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="bg-gradient-to-br from-green-500/20 to-green-600/20 p-3 rounded-xl border border-green-500/30 group-hover:scale-110 transition-transform">
+                    <FileText className="h-6 w-6 text-green-400" />
+                  </div>
+                  <span className="text-xs font-medium text-green-400 flex items-center space-x-1">
+                    <TrendingUp className="h-3 w-3" />
+                    <span>+8.2%</span>
+                  </span>
+                </div>
+                <h3 className="text-sm text-slate-400 mb-1">Aktiv Kreditlər</h3>
+                <p className="text-2xl font-bold text-white">{stats.loans.toLocaleString()}</p>
+              </div>
+
+              {/* Stat Card 3 */}
+              <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6 hover:bg-white/10 transition-all group">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="bg-gradient-to-br from-purple-500/20 to-purple-600/20 p-3 rounded-xl border border-purple-500/30 group-hover:scale-110 transition-transform">
+                    <TrendingUp className="h-6 w-6 text-purple-400" />
+                  </div>
+                  <span className="text-xs font-medium text-red-400 flex items-center space-x-1">
+                    <TrendingUp className="h-3 w-3 rotate-180" />
+                    <span>-2.3%</span>
+                  </span>
+                </div>
+                <h3 className="text-sm text-slate-400 mb-1">Ümumi Kredit Balansı</h3>
+                <p className="text-2xl font-bold text-white">{`${(stats.totalLoanBalance / 1000).toFixed(0)}K ₼`}</p>
+              </div>
+
+              {/* Stat Card 4 */}
+              <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6 hover:bg-white/10 transition-all group">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="bg-gradient-to-br from-indigo-500/20 to-indigo-600/20 p-3 rounded-xl border border-indigo-500/30 group-hover:scale-110 transition-transform">
+                    <DollarSign className="h-6 w-6 text-indigo-400" />
+                  </div>
+                  <span className="text-xs font-medium text-green-400 flex items-center space-x-1">
+                    <TrendingUp className="h-3 w-3" />
+                    <span>+15.7%</span>
+                  </span>
+                </div>
+                <h3 className="text-sm text-slate-400 mb-1">Ümumi Depozitlər</h3>
+                <p className="text-2xl font-bold text-white">{`${(stats.totalDeposits / 1000).toFixed(0)}K ₼`}</p>
+              </div>
             </div>
           </div>
         )}
 
         {/* Tabs */}
         <div className="mb-6">
-          <div className="border-b border-slate-200 overflow-x-auto">
-            <nav className="flex space-x-4 sm:space-x-8 min-w-max sm:min-w-0">
+          <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-2 overflow-x-auto">
+            <nav className="flex space-x-2 min-w-max sm:min-w-0">
               <button
                 onClick={() => setActiveTab('overview')}
-                className={`pb-4 px-1 border-b-2 font-medium text-sm transition flex items-center space-x-2 ${
+                className={`px-4 py-3 rounded-xl font-medium text-sm transition-all flex items-center space-x-2 ${
                   activeTab === 'overview'
-                    ? 'border-blue-600 text-blue-600'
-                    : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300'
+                    ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg shadow-blue-500/20'
+                    : 'text-slate-400 hover:text-white hover:bg-white/5'
                 }`}
               >
                 <PieChart className="h-4 w-4" />
@@ -319,10 +317,10 @@ export default function ReportsPage() {
               </button>
               <button
                 onClick={() => setActiveTab('customers')}
-                className={`pb-4 px-1 border-b-2 font-medium text-sm transition flex items-center space-x-2 ${
+                className={`px-4 py-3 rounded-xl font-medium text-sm transition-all flex items-center space-x-2 ${
                   activeTab === 'customers'
-                    ? 'border-blue-600 text-blue-600'
-                    : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300'
+                    ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg shadow-blue-500/20'
+                    : 'text-slate-400 hover:text-white hover:bg-white/5'
                 }`}
               >
                 <Users className="h-4 w-4" />
@@ -330,10 +328,10 @@ export default function ReportsPage() {
               </button>
               <button
                 onClick={() => setActiveTab('loans')}
-                className={`pb-4 px-1 border-b-2 font-medium text-sm transition flex items-center space-x-2 ${
+                className={`px-4 py-3 rounded-xl font-medium text-sm transition-all flex items-center space-x-2 ${
                   activeTab === 'loans'
-                    ? 'border-blue-600 text-blue-600'
-                    : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300'
+                    ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg shadow-blue-500/20'
+                    : 'text-slate-400 hover:text-white hover:bg-white/5'
                 }`}
               >
                 <DollarSign className="h-4 w-4" />
@@ -341,10 +339,10 @@ export default function ReportsPage() {
               </button>
               <button
                 onClick={() => setActiveTab('risk')}
-                className={`pb-4 px-1 border-b-2 font-medium text-sm transition flex items-center space-x-2 ${
+                className={`px-4 py-3 rounded-xl font-medium text-sm transition-all flex items-center space-x-2 ${
                   activeTab === 'risk'
-                    ? 'border-blue-600 text-blue-600'
-                    : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300'
+                    ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg shadow-blue-500/20'
+                    : 'text-slate-400 hover:text-white hover:bg-white/5'
                 }`}
               >
                 <Shield className="h-4 w-4" />
@@ -361,30 +359,30 @@ export default function ReportsPage() {
             <>
               {/* High-Value Customer Insight */}
               {analytics.highValueCustomers && (
-                <div className="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-xl p-6">
+                <div className="bg-gradient-to-r from-amber-500/10 to-orange-500/10 border border-amber-500/30 rounded-2xl p-6 backdrop-blur-xl">
                   <div className="flex items-start space-x-4">
-                    <div className="bg-amber-100 p-3 rounded-lg">
-                      <Award className="h-6 w-6 text-amber-600" />
+                    <div className="bg-gradient-to-br from-amber-500/20 to-amber-600/20 p-3 rounded-xl border border-amber-500/30">
+                      <Award className="h-6 w-6 text-amber-400" />
                     </div>
                     <div className="flex-1">
-                      <h3 className="text-lg font-semibold text-slate-900 mb-1">Yüksək Dəyərli Müştərilər</h3>
-                      <p className="text-sm text-slate-600 mb-3">
+                      <h3 className="text-lg font-semibold text-white mb-1">Yüksək Dəyərli Müştərilər</h3>
+                      <p className="text-sm text-slate-400 mb-3">
                         50,000 ₼-dən çox balansa malik müştərilər
                       </p>
                       <div className="grid grid-cols-3 gap-4">
                         <div>
-                          <p className="text-xs text-slate-600">Müştəri Sayı</p>
-                          <p className="text-xl sm:text-2xl font-bold text-slate-900">{analytics.highValueCustomers.count}</p>
+                          <p className="text-xs text-slate-400">Müştəri Sayı</p>
+                          <p className="text-xl sm:text-2xl font-bold text-white">{analytics.highValueCustomers.count}</p>
                         </div>
                         <div>
-                          <p className="text-xs text-slate-600">Ümumi Balans</p>
-                          <p className="text-xl sm:text-2xl font-bold text-slate-900">
+                          <p className="text-xs text-slate-400">Ümumi Balans</p>
+                          <p className="text-xl sm:text-2xl font-bold text-white">
                             {(analytics.highValueCustomers.total_balance / 1000).toFixed(0)}K ₼
                           </p>
                         </div>
                         <div>
-                          <p className="text-xs text-slate-600">Orta Kredit Reytinqi</p>
-                          <p className="text-xl sm:text-2xl font-bold text-slate-900">
+                          <p className="text-xs text-slate-400">Orta Kredit Reytinqi</p>
+                          <p className="text-xl sm:text-2xl font-bold text-white">
                             {Math.round(analytics.highValueCustomers.avg_credit_score)}
                           </p>
                         </div>
@@ -398,8 +396,8 @@ export default function ReportsPage() {
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* Credit Score Distribution */}
                 {analytics.creditScoreDistribution && analytics.creditScoreDistribution.length > 0 && (
-                  <div className="bg-white rounded-xl shadow-lg border border-slate-200 p-4 sm:p-6">
-                    <h3 className="text-sm sm:text-md font-semibold text-slate-900 mb-4">Kredit Reytinqi Bölgüsü</h3>
+                  <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-4 sm:p-6 hover:bg-white/10 transition-all">
+                    <h3 className="text-sm sm:text-md font-semibold text-white mb-4">Kredit Reytinqi Bölgüsü</h3>
                     <div className="h-64 sm:h-80">
                       <DataChart
                         data={analytics.creditScoreDistribution}
@@ -418,8 +416,8 @@ export default function ReportsPage() {
 
                 {/* Loan Status Distribution */}
                 {analytics.loanStatusDistribution && analytics.loanStatusDistribution.length > 0 && (
-                  <div className="bg-white rounded-xl shadow-lg border border-slate-200 p-4 sm:p-6">
-                    <h3 className="text-sm sm:text-md font-semibold text-slate-900 mb-4">Kredit Status Bölgüsü</h3>
+                  <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-4 sm:p-6 hover:bg-white/10 transition-all">
+                    <h3 className="text-sm sm:text-md font-semibold text-white mb-4">Kredit Status Bölgüsü</h3>
                     <div className="h-64 sm:h-80">
                       <DataChart
                         data={analytics.loanStatusDistribution}
@@ -444,8 +442,8 @@ export default function ReportsPage() {
             <>
               {/* Customer Segmentation */}
               {analytics.customerSegmentation && analytics.customerSegmentation.length > 0 && (
-                <div className="bg-white rounded-xl shadow-lg border border-slate-200 p-4 sm:p-6">
-                  <h3 className="text-sm sm:text-md font-semibold text-slate-900 mb-4">Müştəri Seqmentasiyası</h3>
+                <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-4 sm:p-6 hover:bg-white/10 transition-all">
+                  <h3 className="text-sm sm:text-md font-semibold text-white mb-4">Müştəri Seqmentasiyası</h3>
                   <div className="h-64 sm:h-80">
                     <DataChart
                       data={analytics.customerSegmentation}
@@ -464,31 +462,31 @@ export default function ReportsPage() {
 
               {/* Top Customers Table */}
               {analytics.topCustomers && analytics.topCustomers.length > 0 && (
-                <div className="bg-white rounded-xl shadow-lg border border-slate-200 p-4 sm:p-6">
-                  <h3 className="text-sm sm:text-md font-semibold text-slate-900 mb-4">Ən Yüksək Balansa Malik Müştərilər (Top 10)</h3>
+                <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-4 sm:p-6">
+                  <h3 className="text-sm sm:text-md font-semibold text-white mb-4">Ən Yüksək Balansa Malik Müştərilər (Top 10)</h3>
                   <div className="overflow-x-auto">
-                    <table className="min-w-full divide-y divide-slate-200 text-sm">
-                      <thead className="bg-slate-50">
+                    <table className="min-w-full divide-y divide-white/10 text-sm">
+                      <thead>
                         <tr>
-                          <th className="px-4 py-3 text-left text-xs font-semibold text-slate-700 uppercase">Müştəri</th>
-                          <th className="px-4 py-3 text-left text-xs font-semibold text-slate-700 uppercase">Hesab Növü</th>
-                          <th className="px-4 py-3 text-right text-xs font-semibold text-slate-700 uppercase">Balans</th>
-                          <th className="px-4 py-3 text-right text-xs font-semibold text-slate-700 uppercase">Kredit Reytinqi</th>
+                          <th className="px-4 py-3 text-left text-xs font-semibold text-slate-300 uppercase">Müştəri</th>
+                          <th className="px-4 py-3 text-left text-xs font-semibold text-slate-300 uppercase">Hesab Növü</th>
+                          <th className="px-4 py-3 text-right text-xs font-semibold text-slate-300 uppercase">Balans</th>
+                          <th className="px-4 py-3 text-right text-xs font-semibold text-slate-300 uppercase">Kredit Reytinqi</th>
                         </tr>
                       </thead>
-                      <tbody className="bg-white divide-y divide-slate-200">
+                      <tbody className="divide-y divide-white/10">
                         {analytics.topCustomers.map((customer, idx) => (
-                          <tr key={idx} className="hover:bg-slate-50">
-                            <td className="px-4 py-3 whitespace-nowrap font-medium text-slate-900">
+                          <tr key={idx} className="hover:bg-white/5 transition-colors">
+                            <td className="px-4 py-3 whitespace-nowrap font-medium text-white">
                               {customer.customer_name}
                             </td>
-                            <td className="px-4 py-3 whitespace-nowrap text-slate-600">
+                            <td className="px-4 py-3 whitespace-nowrap text-slate-400">
                               {customer.account_type}
                             </td>
-                            <td className="px-4 py-3 whitespace-nowrap text-right font-semibold text-slate-900">
+                            <td className="px-4 py-3 whitespace-nowrap text-right font-semibold text-white">
                               {customer.account_balance.toLocaleString()} ₼
                             </td>
-                            <td className="px-4 py-3 whitespace-nowrap text-right text-slate-700">
+                            <td className="px-4 py-3 whitespace-nowrap text-right text-slate-300">
                               {customer.credit_score}
                             </td>
                           </tr>
@@ -501,31 +499,31 @@ export default function ReportsPage() {
 
               {/* Top Revenue Customers */}
               {analytics.topRevenueCustomers && analytics.topRevenueCustomers.length > 0 && (
-                <div className="bg-white rounded-xl shadow-lg border border-slate-200 p-6">
-                  <h3 className="text-md font-semibold text-slate-900 mb-4">Ən Yüksək Əməliyyat Həcminə Malik Müştərilər</h3>
+                <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6">
+                  <h3 className="text-md font-semibold text-white mb-4">Ən Yüksək Əməliyyat Həcminə Malik Müştərilər</h3>
                   <div className="overflow-x-auto">
-                    <table className="min-w-full divide-y divide-slate-200 text-sm">
-                      <thead className="bg-slate-50">
+                    <table className="min-w-full divide-y divide-white/10 text-sm">
+                      <thead>
                         <tr>
-                          <th className="px-4 py-3 text-left text-xs font-semibold text-slate-700 uppercase">Müştəri</th>
-                          <th className="px-4 py-3 text-right text-xs font-semibold text-slate-700 uppercase">Əməliyyat Sayı</th>
-                          <th className="px-4 py-3 text-right text-xs font-semibold text-slate-700 uppercase">Ümumi Həcm</th>
-                          <th className="px-4 py-3 text-right text-xs font-semibold text-slate-700 uppercase">Balans</th>
+                          <th className="px-4 py-3 text-left text-xs font-semibold text-slate-300 uppercase">Müştəri</th>
+                          <th className="px-4 py-3 text-right text-xs font-semibold text-slate-300 uppercase">Əməliyyat Sayı</th>
+                          <th className="px-4 py-3 text-right text-xs font-semibold text-slate-300 uppercase">Ümumi Həcm</th>
+                          <th className="px-4 py-3 text-right text-xs font-semibold text-slate-300 uppercase">Balans</th>
                         </tr>
                       </thead>
-                      <tbody className="bg-white divide-y divide-slate-200">
+                      <tbody className="divide-y divide-white/10">
                         {analytics.topRevenueCustomers.map((customer, idx) => (
-                          <tr key={idx} className="hover:bg-slate-50">
-                            <td className="px-4 py-3 whitespace-nowrap font-medium text-slate-900">
+                          <tr key={idx} className="hover:bg-white/5 transition-colors">
+                            <td className="px-4 py-3 whitespace-nowrap font-medium text-white">
                               {customer.customer_name}
                             </td>
-                            <td className="px-4 py-3 whitespace-nowrap text-right text-slate-600">
+                            <td className="px-4 py-3 whitespace-nowrap text-right text-slate-400">
                               {customer.transaction_count}
                             </td>
-                            <td className="px-4 py-3 whitespace-nowrap text-right font-semibold text-slate-900">
+                            <td className="px-4 py-3 whitespace-nowrap text-right font-semibold text-white">
                               {customer.total_transaction_volume.toLocaleString()} ₼
                             </td>
-                            <td className="px-4 py-3 whitespace-nowrap text-right text-slate-700">
+                            <td className="px-4 py-3 whitespace-nowrap text-right text-slate-300">
                               {customer.account_balance.toLocaleString()} ₼
                             </td>
                           </tr>
@@ -543,8 +541,8 @@ export default function ReportsPage() {
             <>
               {/* Loans by Type */}
               {analytics.loansByType && analytics.loansByType.length > 0 && (
-                <div className="bg-white rounded-xl shadow-lg border border-slate-200 p-4 sm:p-6">
-                  <h3 className="text-sm sm:text-md font-semibold text-slate-900 mb-4">Kredit Növlərinə Görə Bölgü</h3>
+                <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-4 sm:p-6 hover:bg-white/10 transition-all">
+                  <h3 className="text-sm sm:text-md font-semibold text-white mb-4">Kredit Növlərinə Görə Bölgü</h3>
                   <div className="h-64 sm:h-80">
                     <DataChart
                       data={analytics.loansByType}
@@ -563,40 +561,40 @@ export default function ReportsPage() {
 
               {/* Loan Performance */}
               {analytics.loanPerformance && analytics.loanPerformance.length > 0 && (
-                <div className="bg-white rounded-xl shadow-lg border border-slate-200 p-6">
-                  <h3 className="text-md font-semibold text-slate-900 mb-4">Kredit Performansı</h3>
+                <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6">
+                  <h3 className="text-md font-semibold text-white mb-4">Kredit Performansı</h3>
                   <div className="overflow-x-auto">
-                    <table className="min-w-full divide-y divide-slate-200 text-sm">
-                      <thead className="bg-slate-50">
+                    <table className="min-w-full divide-y divide-white/10 text-sm">
+                      <thead>
                         <tr>
-                          <th className="px-4 py-3 text-left text-xs font-semibold text-slate-700 uppercase">Kredit Növü</th>
-                          <th className="px-4 py-3 text-right text-xs font-semibold text-slate-700 uppercase">Ümumi</th>
-                          <th className="px-4 py-3 text-right text-xs font-semibold text-slate-700 uppercase">Aktiv</th>
-                          <th className="px-4 py-3 text-right text-xs font-semibold text-slate-700 uppercase">Ödənilib</th>
-                          <th className="px-4 py-3 text-right text-xs font-semibold text-slate-700 uppercase">Defolt</th>
-                          <th className="px-4 py-3 text-right text-xs font-semibold text-slate-700 uppercase">Defolt Dərəcəsi</th>
+                          <th className="px-4 py-3 text-left text-xs font-semibold text-slate-300 uppercase">Kredit Növü</th>
+                          <th className="px-4 py-3 text-right text-xs font-semibold text-slate-300 uppercase">Ümumi</th>
+                          <th className="px-4 py-3 text-right text-xs font-semibold text-slate-300 uppercase">Aktiv</th>
+                          <th className="px-4 py-3 text-right text-xs font-semibold text-slate-300 uppercase">Ödənilib</th>
+                          <th className="px-4 py-3 text-right text-xs font-semibold text-slate-300 uppercase">Defolt</th>
+                          <th className="px-4 py-3 text-right text-xs font-semibold text-slate-300 uppercase">Defolt Dərəcəsi</th>
                         </tr>
                       </thead>
-                      <tbody className="bg-white divide-y divide-slate-200">
+                      <tbody className="divide-y divide-white/10">
                         {analytics.loanPerformance.map((loan, idx) => (
-                          <tr key={idx} className="hover:bg-slate-50">
-                            <td className="px-4 py-3 whitespace-nowrap font-medium text-slate-900">
+                          <tr key={idx} className="hover:bg-white/5 transition-colors">
+                            <td className="px-4 py-3 whitespace-nowrap font-medium text-white">
                               {loan.loan_type}
                             </td>
-                            <td className="px-4 py-3 whitespace-nowrap text-right text-slate-600">
+                            <td className="px-4 py-3 whitespace-nowrap text-right text-slate-400">
                               {loan.total_loans}
                             </td>
-                            <td className="px-4 py-3 whitespace-nowrap text-right text-green-600">
+                            <td className="px-4 py-3 whitespace-nowrap text-right text-green-400">
                               {loan.active_loans}
                             </td>
-                            <td className="px-4 py-3 whitespace-nowrap text-right text-blue-600">
+                            <td className="px-4 py-3 whitespace-nowrap text-right text-blue-400">
                               {loan.paid_loans}
                             </td>
-                            <td className="px-4 py-3 whitespace-nowrap text-right text-red-600">
+                            <td className="px-4 py-3 whitespace-nowrap text-right text-red-400">
                               {loan.defaulted_loans}
                             </td>
                             <td className="px-4 py-3 whitespace-nowrap text-right font-semibold">
-                              <span className={loan.default_rate > 10 ? 'text-red-600' : 'text-green-600'}>
+                              <span className={loan.default_rate > 10 ? 'text-red-400' : 'text-green-400'}>
                                 {loan.default_rate}%
                               </span>
                             </td>
@@ -615,50 +613,50 @@ export default function ReportsPage() {
             <>
               {/* Risk Analysis */}
               {analytics.riskAnalysis && analytics.riskAnalysis.length > 0 && (
-                <div className="bg-white rounded-xl shadow-lg border border-slate-200 p-6">
+                <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6">
                   <div className="flex items-center space-x-2 mb-4">
-                    <AlertTriangle className="h-5 w-5 text-red-600" />
-                    <h3 className="text-md font-semibold text-slate-900">Yüksək Riskli Müştərilər</h3>
+                    <AlertTriangle className="h-5 w-5 text-red-400" />
+                    <h3 className="text-md font-semibold text-white">Yüksək Riskli Müştərilər</h3>
                   </div>
-                  <p className="text-sm text-slate-600 mb-4">
+                  <p className="text-sm text-slate-400 mb-4">
                     Aşağı kredit reytinqi və yüksək kredit balansı olan müştərilər
                   </p>
                   <div className="overflow-x-auto">
-                    <table className="min-w-full divide-y divide-slate-200 text-sm">
-                      <thead className="bg-slate-50">
+                    <table className="min-w-full divide-y divide-white/10 text-sm">
+                      <thead>
                         <tr>
-                          <th className="px-4 py-3 text-left text-xs font-semibold text-slate-700 uppercase">Müştəri</th>
-                          <th className="px-4 py-3 text-right text-xs font-semibold text-slate-700 uppercase">Kredit Reytinqi</th>
-                          <th className="px-4 py-3 text-right text-xs font-semibold text-slate-700 uppercase">Balans</th>
-                          <th className="px-4 py-3 text-right text-xs font-semibold text-slate-700 uppercase">Ümumi Kredit</th>
-                          <th className="px-4 py-3 text-center text-xs font-semibold text-slate-700 uppercase">Risk Səviyyəsi</th>
+                          <th className="px-4 py-3 text-left text-xs font-semibold text-slate-300 uppercase">Müştəri</th>
+                          <th className="px-4 py-3 text-right text-xs font-semibold text-slate-300 uppercase">Kredit Reytinqi</th>
+                          <th className="px-4 py-3 text-right text-xs font-semibold text-slate-300 uppercase">Balans</th>
+                          <th className="px-4 py-3 text-right text-xs font-semibold text-slate-300 uppercase">Ümumi Kredit</th>
+                          <th className="px-4 py-3 text-center text-xs font-semibold text-slate-300 uppercase">Risk Səviyyəsi</th>
                         </tr>
                       </thead>
-                      <tbody className="bg-white divide-y divide-slate-200">
+                      <tbody className="divide-y divide-white/10">
                         {analytics.riskAnalysis.map((customer, idx) => (
-                          <tr key={idx} className="hover:bg-slate-50">
-                            <td className="px-4 py-3 whitespace-nowrap font-medium text-slate-900">
+                          <tr key={idx} className="hover:bg-white/5 transition-colors">
+                            <td className="px-4 py-3 whitespace-nowrap font-medium text-white">
                               {customer.customer_name}
                             </td>
                             <td className="px-4 py-3 whitespace-nowrap text-right">
-                              <span className={customer.credit_score < 650 ? 'text-red-600 font-semibold' : 'text-slate-700'}>
+                              <span className={customer.credit_score < 650 ? 'text-red-400 font-semibold' : 'text-slate-300'}>
                                 {customer.credit_score}
                               </span>
                             </td>
-                            <td className="px-4 py-3 whitespace-nowrap text-right text-slate-700">
+                            <td className="px-4 py-3 whitespace-nowrap text-right text-slate-300">
                               {customer.account_balance.toLocaleString()} ₼
                             </td>
-                            <td className="px-4 py-3 whitespace-nowrap text-right font-semibold text-slate-900">
+                            <td className="px-4 py-3 whitespace-nowrap text-right font-semibold text-white">
                               {customer.total_loans.toLocaleString()} ₼
                             </td>
                             <td className="px-4 py-3 whitespace-nowrap text-center">
                               <span
                                 className={`px-3 py-1 rounded-full text-xs font-semibold ${
                                   customer.risk_level === 'Yüksək'
-                                    ? 'bg-red-100 text-red-700'
+                                    ? 'bg-red-500/20 text-red-400 border border-red-500/30'
                                     : customer.risk_level === 'Orta'
-                                    ? 'bg-yellow-100 text-yellow-700'
-                                    : 'bg-green-100 text-green-700'
+                                    ? 'bg-yellow-500/20 text-yellow-400 border border-yellow-500/30'
+                                    : 'bg-green-500/20 text-green-400 border border-green-500/30'
                                 }`}
                               >
                                 {customer.risk_level}
@@ -673,6 +671,7 @@ export default function ReportsPage() {
               )}
             </>
           )}
+        </div>
         </div>
       </div>
     </div>
