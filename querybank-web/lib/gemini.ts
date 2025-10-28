@@ -25,7 +25,7 @@ export async function generateQuery(userQuestion: string, retryCount: number = 0
   const model = genAI.getGenerativeModel({
     model: 'gemini-2.5-flash',
     generationConfig: {
-      temperature: retryCount > 0 ? 0.1 : 0.3, // Lower temperature on retry for more deterministic output
+      temperature: retryCount > 0 ? 0.1 : 0.5, // Higher temperature for better informal language understanding
       maxOutputTokens: 1024,
     }
   });
@@ -40,13 +40,25 @@ Database Schema (demo_bank):
 - loans: loan_id, customer_id (FK), loan_type, outstanding_balance, loan_status
 - transactions: transaction_id, customer_id (FK), amount, transaction_type, transaction_date
 
-LANGUAGE NOTE: Users may write in informal Azerbaijani (without special characters):
-- "chox" = "çox" (much/many)
-- "en chox" = "ən çox" (most)
-- "odeyen" = "ödəyən" (paying)
-- "odenis" = "ödəniş" (payment)
-- "musteri" = "müştəri" (customer)
-Always accept both formal and informal spelling!
+CRITICAL LANGUAGE NOTE: Users OFTEN write in informal Azerbaijani (without special characters).
+You MUST understand and accept BOTH forms:
+
+Informal → Formal:
+- "chox", "cox" → "çox" (much/many)
+- "en chox", "en cox" → "ən çox" (most)
+- "odeyen", "ödəyən" → paying
+- "odenis", "ödəniş" → payment
+- "musteri", "müsteri" → "müştəri" (customer)
+- "kredit" → loan
+- "gosterir", "göstərir" → show
+
+Common queries with informal spelling:
+- "en chox kredit odeyen musteri" = customers with most loans
+- "en cox balans" = highest balance
+- "musteri sayi" = customer count
+
+IMPORTANT: NEVER reject queries just because they use informal spelling!
+Treat "en chox kredit odeyen musteri" EXACTLY the same as "ən çox kredit ödəyən müştəri"
 
 === STEP 1: UNDERSTAND USER INTENT ===
 
@@ -224,22 +236,40 @@ User: "təşəkkürlər" or "thank you" or "sağol"
   "explanation": "Polite acknowledgment - no query needed"
 }
 
-Example 9 - Loan query (informal Azerbaijani):
-User: "en chox kredit odeyen musteri" or "ən çox kredit ödəyən müştəri"
+Example 9 - Loan query with INFORMAL spelling (VERY COMMON):
+User: "en chox kredit odeyen musteri" (NO special characters!)
 {
   "response_type": "query_with_chart",
-  "message": "Ən çox kredit ödəyən müştərilər (kredit balansına görə)",
+  "message": "Ən çox kredit balansı olan müştərilər",
   "query": "SET search_path TO demo_bank; SELECT c.first_name, c.last_name, l.loan_type, l.outstanding_balance FROM customers c JOIN loans l ON c.customer_id = l.customer_id ORDER BY l.outstanding_balance DESC LIMIT 10",
   "needs_chart": true,
   "chart_type": "bar",
   "chart_config": {
     "x_column": "first_name",
     "y_column": "outstanding_balance",
-    "title": "Ən Çox Kredit Balansı Olan Müştərilər",
+    "title": "Ən Çox Kredit Olan Müştərilər",
     "xlabel": "Müştəri",
     "ylabel": "Kredit Balansı (₼)"
   },
-  "explanation": "Showing customers with highest loan balances - accepting informal Azerbaijani spelling"
+  "explanation": "Showing customers with highest outstanding loan balances - informal spelling accepted"
+}
+
+Example 9b - Same query with proper spelling:
+User: "ən çox kredit ödəyən müştəri"
+{
+  "response_type": "query_with_chart",
+  "message": "Ən çox kredit balansı olan müştərilər",
+  "query": "SET search_path TO demo_bank; SELECT c.first_name, c.last_name, l.loan_type, l.outstanding_balance FROM customers c JOIN loans l ON c.customer_id = l.customer_id ORDER BY l.outstanding_balance DESC LIMIT 10",
+  "needs_chart": true,
+  "chart_type": "bar",
+  "chart_config": {
+    "x_column": "first_name",
+    "y_column": "outstanding_balance",
+    "title": "Ən Çox Kredit Olan Müştərilər",
+    "xlabel": "Müştəri",
+    "ylabel": "Kredit Balansı (₼)"
+  },
+  "explanation": "Showing customers with highest outstanding loan balances"
 }
 
 Example 10 - Gibberish:
@@ -293,6 +323,7 @@ IMPORTANT:
     // Check if response is empty
     if (!text || text.trim().length === 0) {
       console.error('AI returned empty response!');
+      console.error('User question:', userQuestion);
       console.error('Result:', JSON.stringify(result, null, 2));
       console.error('Response candidates:', aiResponse.candidates);
 
@@ -302,14 +333,38 @@ IMPORTANT:
         console.error('Candidate:', JSON.stringify(candidate, null, 2));
       }
 
-      // Return a helpful error instead of retrying with empty response
+      // FALLBACK: Try to handle common patterns when AI fails
+      const lowerQuestion = userQuestion.toLowerCase();
+
+      // Pattern: loan-related queries (kredit)
+      if ((lowerQuestion.includes('kredit') || lowerQuestion.includes('loan')) &&
+          (lowerQuestion.includes('chox') || lowerQuestion.includes('cox') || lowerQuestion.includes('çox') || lowerQuestion.includes('yuksek') || lowerQuestion.includes('yüksek'))) {
+        console.log('Fallback: Detected loan query, using predefined response');
+        return {
+          response_type: 'query_with_chart',
+          message: 'Ən yüksək kredit balansına malik müştərilər',
+          query: 'SET search_path TO demo_bank; SELECT c.first_name, c.last_name, l.loan_type, l.outstanding_balance FROM customers c JOIN loans l ON c.customer_id = l.customer_id ORDER BY l.outstanding_balance DESC LIMIT 10',
+          needs_chart: true,
+          chart_type: 'bar',
+          chart_config: {
+            x_column: 'first_name',
+            y_column: 'outstanding_balance',
+            title: 'Ən Yüksək Kredit Balansı',
+            xlabel: 'Müştəri',
+            ylabel: 'Kredit Balansı (₼)'
+          },
+          explanation: 'Fallback response for loan query - AI returned empty'
+        };
+      }
+
+      // If no pattern matched, return helpful error
       return {
         response_type: 'error',
-        message: 'AI xidməti cavab vermədi. Zəhmət olmasa bir az sonra yenidən cəhd edin və ya sualınızı sadələşdirin.',
+        message: 'AI xidməti cavab vermədi. Zəhmət olmasa sualınızı bir az fərqli şəkildə yazın.\n\nMəsələn:\n• "Ən yüksək kredit balansı olan müştərilər"\n• "Kredit növlərinə görə balans"\n• "Müştərilərin kredit məlumatları"',
         query: undefined,
         needs_chart: false,
         chart_type: null,
-        explanation: 'AI returned empty response - possible API issue or safety block'
+        explanation: 'AI returned empty response - no fallback pattern matched'
       };
     }
 
