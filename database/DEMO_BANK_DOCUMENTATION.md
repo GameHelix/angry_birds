@@ -420,17 +420,12 @@ GROUP BY customer_id;
 
 ### Step 1: Connect to your PostgreSQL database
 ```bash
-psql -h ep-frosty-voice-a2s9itd4-pooler.eu-central-1.aws.neon.tech \
-     -U tg_db_owner \
-     -d tg_db
+psql $DATABASE_URL
 ```
 
 ### Step 2: Execute the schema file
 ```bash
-psql -h ep-frosty-voice-a2s9itd4-pooler.eu-central-1.aws.neon.tech \
-     -U tg_db_owner \
-     -d tg_db \
-     -f demo_bank_schema.sql
+psql $DATABASE_URL -f demo_bank_schema.sql
 ```
 
 Or from within psql:
