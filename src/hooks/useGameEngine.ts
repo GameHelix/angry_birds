@@ -14,7 +14,8 @@ import {
 const MAX_BIRD_SPEED = 13;
 
 /** Steps to pre-simulate so blocks settle before player sees them */
-const PRESIM_STEPS = 300;
+/** Steps to pre-simulate to resolve minor initial penetrations (positions are now exact) */
+const PRESIM_STEPS = 30;
 
 /** After launch, wait this many steps before checking if bird has landed */
 const POST_LAUNCH_WAIT = 60;

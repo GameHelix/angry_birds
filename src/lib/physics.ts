@@ -218,8 +218,15 @@ export class PhysicsWorld {
   ): { nx: number; ny: number; depth: number } | null {
     if (a.isCircle && b.isCircle) return this._circleCircle(a, b);
     if (!a.isCircle && !b.isCircle) return this._boxBox(a, b);
-    if (a.isCircle && !b.isCircle) return this._circleBox(a, b);
-    return this._circleBox(b, a) ? this._flipNormal(this._circleBox(b, a)!) : null;
+    // a=circle, b=box: _circleBox returns normal pointing FROM box surface TOWARD circle.
+    // Convention in _resolveCollisions is normal FROM a TOWARD b, so we must flip.
+    if (a.isCircle && !b.isCircle) {
+      const col = this._circleBox(a, b);
+      return col ? this._flipNormal(col) : null;
+    }
+    // a=box, b=circle: _circleBox(b,a) returns normal FROM box(a) surface TOWARD circle(b).
+    // That already matches our a→b convention — no flip needed.
+    return this._circleBox(b, a) ?? null;
   }
 
   private _circleCircle(
